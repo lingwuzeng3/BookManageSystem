@@ -19,7 +19,11 @@
     <select id="findById" parameterType="long" resultMap="UserResultMap">
         SELECT * FROM user WHERE id = #{id}
     </select>
-    
+
+    <select id="findByUsername" parameterType="string" resultMap="UserResultMap">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+
     <insert id="insert" parameterType="com.example.library.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (username, password, role, status, create_time, update_time)
         VALUES (#{username}, #{password}, #{role}, #{status}, NOW(), NOW())

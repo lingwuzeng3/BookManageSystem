@@ -10,6 +10,8 @@ public interface UserService {
 
   User findById(Long id);
 
+  User findByUsername(String username);
+
   boolean insert(User user);
 
   boolean update(User user);

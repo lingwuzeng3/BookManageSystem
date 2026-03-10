@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useAuthStore } from '@/stores/auth'
 
 // 创建 axios 实例
 const request: AxiosInstance = axios.create({
@@ -14,12 +15,12 @@ const request: AxiosInstance = axios.create({
 request.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // 添加认证 token
-    const token = localStorage.getItem('token')
-    if (token) {
+    const authStore = useAuthStore()
+    if (authStore.token) {
       config.headers = config.headers || {}
-      config.headers['Authorization'] = `Bearer ${token}`
+      config.headers['Authorization'] = `Bearer ${authStore.token}`
     }
-    
+
     // 添加请求时间戳，防止缓存
     if (config.method === 'get') {
       config.params = {
@@ -27,7 +28,7 @@ request.interceptors.request.use(
         _t: Date.now()
       }
     }
-    
+
     return config
   },
   (error: any) => {
@@ -40,7 +41,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data, status } = response
-    
+
     // 检查业务状态码
     if (status === 200) {
       return data
@@ -51,15 +52,16 @@ request.interceptors.response.use(
   },
   (error: any) => {
     console.error('响应错误:', error)
-    
+
     if (error.response) {
       const { status, data } = error.response
-      
+
       switch (status) {
         case 401:
           ElMessage.error('未授权，请重新登录')
           // 清除 token 并跳转到登录页
-          localStorage.removeItem('token')
+          const authStore = useAuthStore()
+          authStore.clear()
           window.location.href = '/login'
           break
         case 403:
@@ -81,7 +83,7 @@ request.interceptors.response.use(
       // 请求配置错误
       ElMessage.error('请求配置错误')
     }
-    
+
     return Promise.reject(error)
   }
 )

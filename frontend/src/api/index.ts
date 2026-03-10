@@ -27,6 +27,18 @@ export interface User {
   createTime?: string
 }
 
+export interface LoginRequest {
+  username: string
+  password: string
+}
+
+export interface LoginResponse {
+  token: string
+  userId: number
+  username: string
+  role: string
+}
+
 export interface PageResult<T> {
   records: T[]
   total: number
@@ -96,4 +108,12 @@ export const userApi = {
 
   // 删除用户
   delete: (id: number): Promise<boolean> => request.delete(`/users/${id}`)
+}
+
+export const authApi = {
+  // 登录
+  login: (data: LoginRequest): Promise<LoginResponse> => request.post('/auth/login', data),
+
+  // 退出登录
+  logout: (): Promise<string> => request.post('/auth/logout')
 }

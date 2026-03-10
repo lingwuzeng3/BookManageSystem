@@ -1,7 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layout/MainLayout.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login.vue'),
+    meta: { title: '登录' }
+  },
   {
     path: '/',
     component: MainLayout,
@@ -38,6 +45,25 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const isAuthenticated = authStore.isAuthenticated
+
+  if (to.path === '/login') {
+    if (isAuthenticated) {
+      next('/')
+    } else {
+      next()
+    }
+  } else {
+    if (isAuthenticated) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
 })
 
 export default router

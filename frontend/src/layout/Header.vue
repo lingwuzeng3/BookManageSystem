@@ -18,13 +18,13 @@
       <el-dropdown>
         <span class="el-dropdown-link">
           <el-icon><User /></el-icon>
-          管理员
+          {{ authStore.user?.username || '管理员' }}
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -34,11 +34,33 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { User, ArrowDown } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/stores/auth'
+import { ElMessageBox } from 'element-plus'
 
 const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+
 const activeMenu = computed(() => route.path)
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    
+    await authStore.logout()
+    router.push('/login')
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('退出登录失败:', error)
+    }
+  }
+}
 </script>
 
 <style scoped>
