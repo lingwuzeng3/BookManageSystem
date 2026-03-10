@@ -3,8 +3,6 @@ package com.example.library.service.impl;
 import com.example.library.entity.Book;
 import com.example.library.mapper.BookMapper;
 import com.example.library.service.BookService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +42,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public com.example.library.common.PageResult<Book> findByPage(String title, String author, Integer categoryId,
             int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Book> list = bookMapper.findByPage(title, author, categoryId, pageNum, pageSize);
-        PageInfo<Book> pageInfo = new PageInfo<>(list);
-        return new com.example.library.common.PageResult<>(list, pageInfo.getTotal(), pageNum, pageSize);
+        int offset = (pageNum - 1) * pageSize;
+        List<Book> list = bookMapper.findByPage(title, author, categoryId, offset, pageSize);
+        int total = bookMapper.countByPage(title, author, categoryId);
+        return new com.example.library.common.PageResult<>(list, total, pageNum, pageSize);
     }
 }

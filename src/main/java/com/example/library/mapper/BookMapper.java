@@ -17,5 +17,7 @@ public interface BookMapper {
 
     int deleteById(Long id);
 
-    List<Book> findByPage(String title, String author, Integer categoryId, int pageNum, int pageSize);
+    List<Book> findByPage(String title, String author, Integer categoryId, int offset, int pageSize);
+
+    int countByPage(String title, String author, Integer categoryId);
 }

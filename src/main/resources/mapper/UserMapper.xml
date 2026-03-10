@@ -53,7 +53,7 @@
             </if>
         </where>
         ORDER BY id ASC
-        LIMIT #{pageSize} OFFSET (#{pageNum} - 1) * #{pageSize}
+        LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
     <select id="countByPage" resultType="int">

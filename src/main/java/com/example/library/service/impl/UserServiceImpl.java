@@ -42,7 +42,8 @@ public class UserServiceImpl implements UserService {
   @Override
   public com.example.library.common.PageResult<User> findByPage(String username, String role, String status,
       int pageNum, int pageSize) {
-    List<User> list = userMapper.findByPage(username, role, status, pageNum, pageSize);
+    int offset = (pageNum - 1) * pageSize;
+    List<User> list = userMapper.findByPage(username, role, status, offset, pageSize);
 
     int total = userMapper.countByPage(username, role, status);
 

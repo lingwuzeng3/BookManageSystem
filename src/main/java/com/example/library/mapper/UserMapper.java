@@ -17,7 +17,7 @@ public interface UserMapper {
 
   int deleteById(Long id);
 
-  List<User> findByPage(String username, String role, String status, int pageNum, int pageSize);
+  List<User> findByPage(String username, String role, String status, int offset, int pageSize);
 
   int countByPage(String username, String role, String status);
 }
