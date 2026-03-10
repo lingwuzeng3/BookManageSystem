@@ -15,11 +15,3 @@ mybatis:
   type-aliases-package: com.example.library.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  support-methods-arguments: true
-  params: count=countSql
-  # 关键配置：关闭OFFSET运算
-  offset-as-page-num: true  # 如果使用的是PageHelper 5.x版本
